@@ -1,16 +1,14 @@
 import sys
 import csv
+from Input.InputModule import InputModule
 
 
-class CSVInput:
+class CSVInput(InputModule):
     CSV_DELIMITER = ','
     TSV_DELIMITER = '\t'
 
     def __init__(self, input_file=sys.stdin, delimiter=CSV_DELIMITER):
-        if input_file != sys.stdin:
-            self.input_file = open(input_file, mode='r')
-        else:
-            self.input_file = input_file
+        InputModule.__init__(self, input_file=input_file)
         self.reader = csv.reader(self.input_file, delimiter=delimiter)
 
         try:
