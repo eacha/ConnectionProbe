@@ -1,4 +1,5 @@
 import sys
+import threading
 
 
 class InputModule:
@@ -8,3 +9,6 @@ class InputModule:
             self.input_file = open(input_file, mode='r')
         else:
             self.input_file = input_file
+
+        # Declare the mutex
+        self.thread_lock = threading.Lock()

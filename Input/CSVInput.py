@@ -23,11 +23,20 @@ class CSVInput(InputModule):
             return 0
 
     def read(self):
+        self.thread_lock.acquire()
         try:
             row = self.reader.next()
         except StopIteration:
-            return None
-        return row[self.get_column_id('saddr')]
+            row = None
+        self.thread_lock.release()
+
+        return self.get_element(row, self.get_column_id('saddr'))
 
     def close(self):
         self.input_file.close()
+
+    def get_element(self, list, index):
+        if list is None:
+            return None
+        else:
+            return list[index]
