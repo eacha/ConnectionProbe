@@ -10,6 +10,7 @@ parser = argparse.ArgumentParser(description='Process Zmap output')
 parser.add_argument('-o', '--output', help='output file', default=sys.stdout)
 parser.add_argument('-om', '--outputModule', help='set output module. default=csv', default='csv')
 parser.add_argument('-i', '--input', help='input file', default=sys.stdin)
+parser.add_argument('-t', '--threads', help='number of threads of module execution', default=1, type=int)
 parser.add_argument('--sslCertificate', help='obtain ssl certificate for each ip', action="store_true")
 args = parser.parse_args()
 
@@ -24,8 +25,17 @@ else:
 # Setting input module
 input = CSVInput(input_file=args.input)
 
+threads = list()
 if args.sslCertificate:
-    ssl_cert = SSLCertificate(input_module=input, output_module=output)
-    ssl_cert.start()
-    ssl_cert.join()
+    for x in range(0, args.threads):
+        ssl_cert = SSLCertificate(input_module=input, output_module=output)
+        ssl_cert.start()
+        threads.append(ssl_cert)
+
+# Wait for the threads
+for thread in threads:
+    thread.join()
 print 'end'
+
+input.close()
+output.close()
