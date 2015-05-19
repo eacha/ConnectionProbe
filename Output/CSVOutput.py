@@ -14,10 +14,12 @@ class CSVOutput(OutputModule):
         self.printed_header = False
 
     def write_dict(self, dict):
+        self.thread_lock.acquire()
         if not self.printed_header:
             self.printed_header = True
             self.writer.writerow(dict.keys())
         self.writer.writerow(dict.values())
+        self.thread_lock.release()
 
     def close(self):
         self.output_file.close()

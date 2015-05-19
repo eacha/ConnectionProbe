@@ -1,4 +1,5 @@
 import sys
+import threading
 
 
 class OutputModule:
@@ -8,3 +9,6 @@ class OutputModule:
             self.output_file = open(output_file, mode='w')
         else:
             self.output_file = output_file
+
+        # Declare the mutex
+        self.thread_lock = threading.Lock()
