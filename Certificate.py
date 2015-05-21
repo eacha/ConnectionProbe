@@ -40,11 +40,13 @@ class Certificate:
         return self.subject.commonName
 
     def data_dict(self):
+        return self.data_with_out_certificate().update({'Raw Certificate': self.raw_certificate.replace('\n', '')})
+
+    def data_with_out_certificate(self):
         return {'ip': self.ip,
                 'Organization Name': self.get_organization_name(),
                 'Organization URL': self.get_organization_url(),
                 'Certificate Authority': self.get_name_authority(),
                 'Key Bits': self.get_key_bits(),
                 'Signature Algorithm': self.get_signature_algorithm(),
-                'Raw Certificate': self.raw_certificate.replace('\n', '')
                 }
