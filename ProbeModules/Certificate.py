@@ -5,8 +5,9 @@ __author__ = 'eduardo'
 
 class Certificate:
 
-    def __init__(self, ip, cert, x509):
+    def __init__(self, ip, validation, cert, x509):
         self.ip = ip
+        self.validation = validation
         self.raw_certificate = cert
         self.certificate_authority = x509.get_issuer()
         self.public_key = x509.get_pubkey()
@@ -43,6 +44,7 @@ class Certificate:
 
     def data_dict(self):
         return OrderedDict([('ip', self.ip),
+                            ('validation', self.validation),
                             ('Organization Name', self.get_organization_name()),
                             ('Organization URL', self.get_organization_url()),
                             ('Certificate Authority', self.get_name_authority()),
