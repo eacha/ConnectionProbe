@@ -2,11 +2,14 @@ import threading
 
 
 class SocketStatistic:
-    def __init__(self):
+    def __init__(self, file=None):
         self.thread_lock = threading.Lock()
         self.probe_send = 0
         self.errors = 0
         self.responses = 0
+        if file is not None:
+            with open('data.txt') as f:
+                self.total = sum(1 for _ in f) - 1
 
     def add_probe_send(self, value=1):
         self.thread_lock().acquire()
