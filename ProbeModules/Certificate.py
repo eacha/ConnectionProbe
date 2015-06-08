@@ -1,13 +1,15 @@
 from collections import OrderedDict
+import OpenSSL
 
 __author__ = 'eduardo'
 
 
 class Certificate:
 
-    def __init__(self, ip, cert, x509):
+    def __init__(self, x509, ip=None):
         self.ip = ip
-        self.raw_certificate = cert
+        self.x509 = x509
+        self.raw_certificate = OpenSSL.crypto.dump_certificate(OpenSSL.crypto.FILETYPE_PEM, x509)
         self.certificate_authority = x509.get_issuer()
         self.public_key = x509.get_pubkey()
         self.serial_number = x509.get_serial_number()
@@ -40,6 +42,9 @@ class Certificate:
 
     def get_organization_url(self):
         return self.subject.commonName
+
+    def get_x509(self):
+        return self.x509
 
     def data_dict(self):
         return OrderedDict([('ip', self.ip),

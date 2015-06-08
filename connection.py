@@ -17,4 +17,5 @@ x509 = ssl_sock.get_peer_certificate()
 pprint.pprint(ssl_sock.get_peer_cert_chain())
 pprint.pprint(x509.get_subject())
 
-
+ssl_sock.close()
+sock.close()

@@ -24,7 +24,7 @@ class SSLCertificate(threading.Thread):
             try:
                 logger.debug('Try to obtain certificate from %s ', ip)
                 raw_certificate = ssl.get_server_certificate((ip, 443), ssl_version=ssl.PROTOCOL_SSLv23)
-                certificate = Certificate.Certificate(ip, raw_certificate, OpenSSL.crypto.load_certificate(OpenSSL.crypto.FILETYPE_PEM, raw_certificate))
+                certificate = Certificate.Certificate(raw_certificate, ip)
                 self.output_module.write_dict(certificate.data_dict())
             except ssl.SSLError, e:
                 logger.error('Error %s to obtain ssl certificate from %s', e, ip)

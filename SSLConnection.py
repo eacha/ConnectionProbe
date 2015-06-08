@@ -1,17 +1,23 @@
 import pprint
 import socket
 from OpenSSL import SSL
+from ProbeModules.Certificate import Certificate
 
 __author__ = 'eduardo'
+
+CA_CERTS = '/etc/ssl/certs/ca-certificates.crt'
+
+
+
 
 
 class SSLConnection:
 
-    def __init__(self, host, port, version=SSL.SSLv23_METHOD):
+    def __init__(self, host, port, version=SSL.SSLv23_METHOD, verify=True):
         self.host = host
         self.port = port
         self.sock = self.__connection_socket()
-        self.context = SSL.Context(version)
+        self.context = self.__connection_context(version, verify)
         self.ssl_sock = self.__connection_ssl_socket()
 
     def __connection_socket(self):
@@ -26,22 +32,51 @@ class SSLConnection:
         ssl_sock.do_handshake()
         return ssl_sock
 
+    def __connection_context(self, version, verify):
+        context = SSL.Context(version)
+        if verify:
+            context.set_verify(SSL.VERIFY_PEER | SSL.VERIFY_FAIL_IF_NO_PEER_CERT, self.certificate_callback)
+            context.load_verify_locations(CA_CERTS)
+        return context
+
+    @staticmethod
+    def certificate_callback(connection, x509, errnum, errdepth, ok):
+        if not ok:
+            return False
+        return ok
+
     def get_certificate(self):
         return self.ssl_sock.get_peer_certificate()
 
     def get_certificate_chain(self):
         return self.ssl_sock.get_peer_cert_chain()
 
+    def get_formatted_certificate(self):
+        certificate = self.get_certificate()
+        return Certificate(certificate, self.host)
+
+    def get_formatted_cert_chain(self):
+        chain = self. get_certificate_chain()
+        formatted_chain = []
+        for certificate in chain:
+            formatted_chain.append(Certificate(certificate))
+        return formatted_chain
+
+    def close(self):
+        self.ssl_sock.shutdown()
+        self.sock.close()
 
 ## MAIN ##
 
-# host = '200.9.100.69'
-# port = 443
-#
-# sslconnection = SSLConnection(host, port)
-# pprint.pprint(sslconnection.get_certificate().get_subject())
-# for cert in sslconnection.get_certificate_chain():
-#     pprint.pprint(cert.get_subject())
+host = '200.9.100.67'
+port = 443
+
+sslconnection = SSLConnection(host, port)
+print sslconnection.get_formatted_certificate().data_dict()
+for cert in sslconnection.get_formatted_cert_chain():
+    print cert.data_dict()
+
+sslconnection.close()
 
 
 
