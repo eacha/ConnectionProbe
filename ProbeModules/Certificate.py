@@ -51,11 +51,3 @@ class Certificate:
                             ('Key Bits', self.get_key_bits()),
                             ('Signature Algorithm', self.get_signature_algorithm()),
                             ('Raw Certificate', self.raw_certificate.replace('\n', ''))])
-        # return {'ip': self.ip,
-        #         'Organization Name': self.get_organization_name(),
-        #         'Organization URL': self.get_organization_url(),
-        #         'Certificate Authority': self.get_name_authority(),
-        #         'Key Bits': self.get_key_bits(),
-        #         'Signature Algorithm': self.get_signature_algorithm(),
-        #         'Raw Certificate': self.raw_certificate.replace('\n', '')
-        #         }
