@@ -1,11 +1,8 @@
 import ssl
 import threading
 import logging
-
 import OpenSSL
-
 from ProbeModules import Certificate
-
 
 logger = logging.getLogger('probe_module.sslCertificate')
 logging.basicConfig(level=logging.DEBUG)
