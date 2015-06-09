@@ -8,14 +8,12 @@ __author__ = 'eduardo'
 CA_CERTS = '/etc/ssl/certs/ca-certificates.crt'
 
 
-
-
-
 class SSLConnection:
 
     def __init__(self, host, port, version=SSL.SSLv23_METHOD, verify=True):
         self.host = host
         self.port = port
+        self.verify = verify
         self.sock = self.__connection_socket()
         self.context = self.__connection_context(version, verify)
         self.ssl_sock = self.__connection_ssl_socket()
@@ -68,15 +66,20 @@ class SSLConnection:
 
 ## MAIN ##
 
-host = '200.9.100.67'
+ucursos = '200.9.100.67'
+host = '77.236.230.12'
 port = 443
 
-sslconnection = SSLConnection(host, port)
-print sslconnection.get_formatted_certificate().data_dict()
-for cert in sslconnection.get_formatted_cert_chain():
-    print cert.data_dict()
-
-sslconnection.close()
+try:
+    sslconnection = SSLConnection(ucursos, port)
+    print sslconnection.get_formatted_certificate().data_dict()
+    for cert in sslconnection.get_formatted_cert_chain():
+        print cert.data_dict()
+    sslconnection.close()
+except SSL.Error, e:
+    print e
+except socket.error, e:
+    print e
 
 
 
