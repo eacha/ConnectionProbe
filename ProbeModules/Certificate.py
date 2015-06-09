@@ -7,7 +7,7 @@ __author__ = 'eduardo'
 
 class Certificate:
 
-    def __init__(self, x509, validation, ip=None, ):
+    def __init__(self, x509, validation, ip=None):
         self.ip = ip
         self.x509 = x509
         self.raw_certificate = OpenSSL.crypto.dump_certificate(OpenSSL.crypto.FILETYPE_PEM, x509)
