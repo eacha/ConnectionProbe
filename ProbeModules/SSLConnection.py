@@ -1,4 +1,3 @@
-import pprint
 import socket
 from OpenSSL import SSL
 from ProbeModules.Certificate import Certificate

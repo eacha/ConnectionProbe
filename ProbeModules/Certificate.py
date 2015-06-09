@@ -45,7 +45,6 @@ class Certificate:
         return self.x509
 
     def data_dict(self):
-        print self.expire_time
         return OrderedDict([('ip', self.ip),
                             ('Expired Time', self.expired_time),
                             ('Organization Name', self.get_organization_name()),
