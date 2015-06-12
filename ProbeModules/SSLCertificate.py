@@ -28,10 +28,11 @@ class SSLCertificate(threading.Thread):
                 self.get_certificate(ip, True)
             except SSL.Error, e:
                 logger.error('Error %s to obtain ssl certificate from %s', e, ip)
-                try:
-                    self.get_certificate(ip, False)
-                except Exception, e:
-                    logger.error('Error %s from %s', e, ip)
+                if ('ECONNRESET' not in e) and ('ETIMEDOUT' not in e):
+                    try:
+                        self.get_certificate(ip, False)
+                    except Exception, e:
+                        logger.error('Error %s from %s', e, ip)
             except Exception, e:
                 logger.error('Error %s from %s', e, ip)
 
