@@ -44,7 +44,7 @@ class SSLCertificate(threading.Thread):
     @staticmethod
     def is_tslv1(error):
         if isinstance(error.message, list):
-            return 'tlsv1 alert protocol version' in error[0]
+            return 'tlsv1 alert protocol version' in error.message[0]
         return False
 
     @staticmethod
