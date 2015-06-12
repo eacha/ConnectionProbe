@@ -21,6 +21,12 @@ class SSLCertificate(threading.Thread):
         self.output_module.write_dict(certificate)
         ssl_connection.close()
 
+    def get_certificate_exception(self, ip, verify):
+        try:
+            self.get_certificate(ip, verify)
+        except Exception, error:
+            logger.error('Error %s from %s', error, ip)
+
     def get_certificate_tslv1(self, ip):
         try:
             self.get_certificate(ip, True, version=SSL.TLSv1_METHOD)
@@ -37,7 +43,7 @@ class SSLCertificate(threading.Thread):
 
     @staticmethod
     def is_tslv1(error):
-        if isinstance(error, list):
+        if isinstance(error.message, list):
             return 'tlsv1 alert protocol version' in error[0]
         return False
 
@@ -57,10 +63,10 @@ class SSLCertificate(threading.Thread):
             except SSL.Error, error:
                 logger.error('Error %s to obtain ssl certificate from %s', error, ip)
                 if (not SSLCertificate.is_connection_reset(error)) and (not SSLCertificate.is_timeout(error)):
-                    try:
-                        self.get_certificate(ip, False)
-                    except Exception, error:
-                        logger.error('Error %s from %s', error, ip)
+                    if SSLCertificate.is_tslv1(error):
+                        self.get_certificate_tslv1(ip)
+                    else:
+                        self.get_certificate_exception(ip, False)
             except Exception, error:
                 logger.error('Error %s from %s', error, ip)
 
