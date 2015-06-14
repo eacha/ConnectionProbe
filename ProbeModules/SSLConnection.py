@@ -64,31 +64,40 @@ class SSLConnection:
         self.sock.close()
 
 
-def get_certificate(ip, verify, version):
-    ssl_connection = SSLConnection(ip, 443, verify, version=version)
-    certificate = ssl_connection.get_formatted_certificate().data_dict()
-    print certificate
-    ssl_connection.close()
+def is_timeout(error):
+    return 'ETIMEDOUT' in error
 
-def tlsv1(error):
+
+def is_connection_reset(error):
+    return 'ECONNRESET' in error
+
+
+def is_tlsv1(error):
     if isinstance(error.message, list):
         return 'tlsv1 alert protocol version' in error.message[0]
     return False
 
-if __name__ == '__main__':
 
-    ip = '186.67.248.4'
+def get_certificate(ip, verify, version=SSL.SSLv23_METHOD):
+    ssl_connection = SSLConnection(ip, 443, verify, version=version)
+    certificate = ssl_connection.get_formatted_certificate().data_dict()
+    ssl_connection.close()
+    return certificate
 
-    try:
-        get_certificate(ip, True, version=SSL.SSLv23_METHOD)
-    except SSL.Error, e:
-        if ('ECONNRESET' not in e) and ('ETIMEDOUT' not in e):
-            if tlsv1(e):
-                try:
-                    get_certificate(ip, False, version=SSL.TLSv1_METHOD)
-                except Exception, e:
-                    print e
-    except Exception, e:
-        print e
+# if __name__ == '__main__':
+#
+#     ip = '186.67.248.4'
+#
+#     try:
+#         get_certificate(ip, True, version=SSL.SSLv23_METHOD)
+#     except SSL.Error, e:
+#         if ('ECONNRESET' not in e) and ('ETIMEDOUT' not in e):
+#             if tlsv1(e):
+#                 try:
+#                     get_certificate(ip, False, version=SSL.TLSv1_METHOD)
+#                 except Exception, e:
+#                     print e
+#     except Exception, e:
+#         print e
 
 
