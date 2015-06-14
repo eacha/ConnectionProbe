@@ -32,28 +32,13 @@ class SSLCertificate(threading.Thread):
             self.get_certificate(ip, True, version=SSL.TLSv1_METHOD)
         except SSL.Error, error:
             logger.error('Error %s to obtain ssl certificate from %s', error, ip)
-            if (not SSLCertificate.is_connection_reset(error)) and (not SSLCertificate.is_timeout(error)):
+            if (not SSLConnection.is_connection_reset(error)) and (not SSLConnection.is_timeout(error)):
                 try:
                     self.get_certificate(ip, False, version=SSL.TLSv1_METHOD)
                 except Exception, error:
                     logger.error('Error %s from %s', error, ip)
         except Exception, error:
             logger.error('Error %s from %s', error, ip)
-
-
-    @staticmethod
-    def is_tslv1(error):
-        if isinstance(error.message, list):
-            return 'tlsv1 alert protocol version' in error.message[0]
-        return False
-
-    @staticmethod
-    def is_timeout(error):
-        return 'ETIMEDOUT' in error
-
-    @staticmethod
-    def is_connection_reset(error):
-        return 'ECONNRESET' in error
 
     def run(self):
         ip = self.input_module.read()
@@ -62,8 +47,8 @@ class SSLCertificate(threading.Thread):
                 self.get_certificate(ip, True)
             except SSL.Error, error:
                 logger.error('Error %s to obtain ssl certificate from %s', error, ip)
-                if (not SSLCertificate.is_connection_reset(error)) and (not SSLCertificate.is_timeout(error)):
-                    if SSLCertificate.is_tslv1(error):
+                if (not SSLConnection.is_connection_reset(error)) and (not SSLConnection.is_timeout(error)):
+                    if SSLConnection.is_tslv1(error):
                         self.get_certificate_tslv1(ip)
                     else:
                         self.get_certificate_exception(ip, False)
