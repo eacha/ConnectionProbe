@@ -1,5 +1,10 @@
+import logging
 import sys
 import threading
+
+logger = logging.getLogger('Input.InputModule')
+logging.basicConfig(level=logging.DEBUG)
+TICKS = 500
 
 
 class InputModule:
@@ -12,3 +17,8 @@ class InputModule:
 
         # Declare the mutex
         self.thread_lock = threading.Lock()
+        self.input_lines = 0
+
+    def logging_ticks(self):
+        if self.input_line % TICKS:
+            logger.info('Lines processed %d', self.input_lines)
