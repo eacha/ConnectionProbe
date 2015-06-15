@@ -26,6 +26,8 @@ class CSVInput(InputModule):
         self.thread_lock.acquire()
         try:
             row = self.reader.next()
+            self.input_lines += 1
+            self.logging_ticks()
         except StopIteration:
             row = None
         self.thread_lock.release()
