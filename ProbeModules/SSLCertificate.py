@@ -4,7 +4,7 @@ from OpenSSL import SSL
 from ProbeModules.SSLConnection import SSLConnection
 
 logger = logging.getLogger('probe_module.sslCertificate')
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(filename='SSLCertificate.log', level=logging.DEBUG)
 
 
 class SSLCertificate(threading.Thread):
