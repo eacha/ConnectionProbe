@@ -1,10 +1,11 @@
 import logging
 import sys
 import threading
+import time
 
 logger = logging.getLogger('Input.InputModule')
 logging.basicConfig(level=logging.DEBUG)
-TICKS = 500
+TICKS = 100
 
 
 class InputModule:
@@ -20,5 +21,5 @@ class InputModule:
         self.input_lines = 0
 
     def logging_ticks(self):
-        if self.input_line % TICKS:
-            logger.info('Lines processed %d', self.input_lines)
+        if self.input_lines % TICKS == 0:
+            logger.info('%s Lines processed %d', time.strftime('%H:%M:%S'), self.input_lines)

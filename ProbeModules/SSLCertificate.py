@@ -4,7 +4,7 @@ from OpenSSL import SSL
 from ProbeModules.SSLConnection import SSLConnection
 
 logger = logging.getLogger('probe_module.sslCertificate')
-logging.basicConfig(filename='SSLCertificate.log', level=logging.DEBUG)
+logger.setLevel(logging.CRITICAL)
 
 
 class SSLCertificate(threading.Thread):
@@ -48,7 +48,7 @@ class SSLCertificate(threading.Thread):
             except SSL.Error, error:
                 logger.error('Error %s to obtain ssl certificate from %s', error, ip)
                 if (not SSLConnection.is_connection_reset(error)) and (not SSLConnection.is_timeout(error)):
-                    if SSLConnection.is_tslv1(error):
+                    if SSLConnection.is_tlsv1(error):
                         self.get_certificate_tlsv1(ip)
                     else:
                         self.get_certificate_exception(ip, False)
