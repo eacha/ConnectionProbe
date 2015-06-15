@@ -27,7 +27,7 @@ class SSLCertificate(threading.Thread):
         except Exception, error:
             logger.error('Error %s from %s', error, ip)
 
-    def get_certificate_tslv1(self, ip):
+    def get_certificate_tlsv1(self, ip):
         try:
             self.get_certificate(ip, True, version=SSL.TLSv1_METHOD)
         except SSL.Error, error:
@@ -49,7 +49,7 @@ class SSLCertificate(threading.Thread):
                 logger.error('Error %s to obtain ssl certificate from %s', error, ip)
                 if (not SSLConnection.is_connection_reset(error)) and (not SSLConnection.is_timeout(error)):
                     if SSLConnection.is_tslv1(error):
-                        self.get_certificate_tslv1(ip)
+                        self.get_certificate_tlsv1(ip)
                     else:
                         self.get_certificate_exception(ip, False)
             except Exception, error:
