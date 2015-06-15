@@ -63,18 +63,18 @@ class SSLConnection:
         self.ssl_sock.shutdown()
         self.sock.close()
 
+    @staticmethod
+    def is_timeout(error):
+        return 'ETIMEDOUT' in error
 
-def is_timeout(error):
-    return 'ETIMEDOUT' in error
+    @staticmethod
+    def is_connection_reset(error):
+        return 'ECONNRESET' in error
 
-
-def is_connection_reset(error):
-    return 'ECONNRESET' in error
-
-
-def is_tlsv1(error):
-    if isinstance(error.message, list):
-        return 'tlsv1 alert protocol version' in error.message[0]
-    return False
+    @staticmethod
+    def is_tlsv1(error):
+        if isinstance(error.message, list):
+            return 'tlsv1 alert protocol version' in error.message[0]
+        return False
 
 
