@@ -1,11 +1,14 @@
 import logging
+import logging.config
 import sys
 import threading
 import time
+from util import get_logging_config
 
-logger = logging.getLogger('Input.InputModule')
-logging.basicConfig(level=logging.DEBUG)
-TICKS = 100
+logging.config.fileConfig(get_logging_config())
+logger = logging.getLogger(__name__)
+
+TICKS = 2
 
 
 class InputModule:

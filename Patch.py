@@ -1,14 +1,16 @@
 #!usr/bin/python
 import argparse
 import logging
+import logging.config
 import sys
 from Input.CSVInput import CSVInput
 from Output.CSVOutput import CSVOutput
 from Output.JsonOutput import JsonOutput
 from ProbeModules.SSLCertificate import SSLCertificate
+from util import get_logging_config
 
-logger = logging.getLogger('Patch')
-logging.basicConfig(level=logging.DEBUG)
+logging.config.fileConfig(get_logging_config())
+logger = logging.getLogger(__name__)
 
 parser = argparse.ArgumentParser(description='Process Zmap output')
 parser.add_argument('-o', '--output', help='output file', default=sys.stdout)
@@ -29,7 +31,7 @@ else:
 # Setting input module
 input = CSVInput(input_file=args.input)
 
-logger.debug('Start scanning')
+logger.info('Start scanning')
 
 threads = list()
 if args.sslCertificate:
@@ -42,7 +44,7 @@ if args.sslCertificate:
 for thread in threads:
     thread.join()
 
-logger.debug('End scanning')
+logger.info('End scanning')
 
 input.close()
 output.close()

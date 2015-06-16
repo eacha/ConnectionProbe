@@ -1,10 +1,12 @@
 import threading
 import logging
+import logging.config
 from OpenSSL import SSL
 from ProbeModules.SSLConnection import SSLConnection
+from util import get_logging_config
 
-logger = logging.getLogger('probe_module.sslCertificate')
-logger.setLevel(logging.CRITICAL)
+logging.config.fileConfig(get_logging_config())
+logger = logging.getLogger(__name__)
 
 
 class SSLCertificate(threading.Thread):
@@ -15,7 +17,6 @@ class SSLCertificate(threading.Thread):
         self.output_module = output_module
 
     def get_certificate(self, ip, verify, version=SSL.SSLv23_METHOD):
-        logger.debug('Try to obtain certificate from %s ', ip)
         ssl_connection = SSLConnection(ip, 443, verify, version)
         certificate = ssl_connection.get_formatted_certificate().data_dict()
         self.output_module.write_dict(certificate)
@@ -43,6 +44,7 @@ class SSLCertificate(threading.Thread):
     def run(self):
         ip = self.input_module.read()
         while ip is not None:
+            logger.info('Try to obtain certificate from %s ', ip)
             try:
                 self.get_certificate(ip, True)
             except SSL.Error, error:
