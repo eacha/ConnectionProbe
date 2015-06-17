@@ -59,4 +59,4 @@ class SSLCertificate(threading.Thread):
 
             ip = self.input_module.read()
 
-        logger.debug('Finish thread %s', self.getName())
+        logger.info('Finish thread %s', self.getName())
